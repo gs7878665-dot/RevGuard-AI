@@ -18,26 +18,30 @@ export default function ThreeBackground3D({ activeTab = 'workbench', isProcessin
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // 1. Scene, Camera, Renderer Setup
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x020617, 0.022);
+    let renderer, animationFrameId;
 
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    camera.position.set(0, 0, 12);
+    try {
+      // 1. Scene, Camera, Renderer Setup
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x020617, 0.022);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: "high-performance"
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 0, 12);
+
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance"
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
 
     // 2. Dynamic Point Lights
     const ambientLight = new THREE.AmbientLight(0x0f172a, 1.8);
@@ -267,15 +271,23 @@ export default function ThreeBackground3D({ activeTab = 'workbench', isProcessin
       renderer.render(scene, camera);
     };
 
-    animate();
+      animate();
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      renderer.dispose();
-    };
+      return () => {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('resize', handleResize);
+        if (renderer) renderer.dispose();
+      };
+    } catch (err) {
+      console.warn("ThreeBackground3D WebGL initialization skipped:", err);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
+
 
   return (
     <canvas

@@ -238,8 +238,9 @@ def run_risk_evaluation():
     passed = 0
 
     print("=" * 80)
-    print(" REVGUARD AI — CLAUDE RISK JUDGMENT EVALUATION SUITE")
+    print(" REVGUARD AI -- GEMINI RISK JUDGMENT EVALUATION SUITE")
     print("=" * 80)
+
     print(f"{'ID':<10} | {'Expected':<18} | {'Actual Verdict':<18} | {'Status':<8}")
     print("-" * 80)
 

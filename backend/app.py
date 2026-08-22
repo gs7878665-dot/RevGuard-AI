@@ -1,3 +1,4 @@
+import uuid
 import os
 import json
 from datetime import datetime, timezone
@@ -6,7 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 
-from config import DATASET_PATH, DB_PATH, MAX_ATTEMPTS_PER_PAYMENT, MAX_MESSAGES_PER_7_DAYS, SUCCESS_PROBABILITIES, RETRY_DELAYS
+from config import (
+    DATASET_PATH, DB_PATH, MAX_ATTEMPTS_PER_PAYMENT, MAX_MESSAGES_PER_7_DAYS, 
+    SUCCESS_PROBABILITIES, RETRY_DELAYS, GEMINI_API_KEY, GEMINI_MODEL, 
+    RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+)
+
 from data_generator import load_or_create_dataset, generate_synthetic_dataset
 from classifier import classify_root_cause
 from risk_judgment import judge_customer_risk
@@ -37,6 +43,25 @@ init_db()
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "Subscription Payment Recovery Agent"}
+
+@app.get("/api/system-status")
+def get_system_status():
+    """Returns whether the website is running on Live API Keys or Default Demo Data mode."""
+    has_gemini = bool(GEMINI_API_KEY and len(GEMINI_API_KEY) > 5)
+    has_razorpay = bool(RAZORPAY_KEY_ID and RAZORPAY_KEY_ID != "rzp_test_mock_id")
+    
+    running_mode = "LIVE_API_KEYS" if (has_gemini or has_razorpay) else "OFFLINE_FALLBACK"
+    
+    return {
+        "running_mode": running_mode,
+        "mode_label": "LIVE API KEYS ACTIVE" if running_mode == "LIVE_API_KEYS" else "DEFAULT DEMO DATA MODE",
+        "gemini_api_key_configured": has_gemini,
+        "gemini_model": GEMINI_MODEL if has_gemini else "gemini-2.5-flash (Heuristic Fallback)",
+        "razorpay_key_id_configured": has_razorpay,
+        "razorpay_mode": "Live Razorpay Test API" if has_razorpay else "Simulated Test Link Generator",
+        "database": "SQLite (audit_log.db)",
+        "status": "online"
+    }
 
 @app.get("/api/dataset")
 def get_dataset():

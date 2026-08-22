@@ -3,7 +3,8 @@ import uuid
 import urllib.request
 import urllib.parse
 import urllib.error
-from config import ANTHROPIC_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, CLAUDE_MODEL
+from config import GEMINI_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, GEMINI_MODEL
+
 
 def execute_action(payment_record: dict, decision_info: dict) -> dict:
     """
@@ -136,28 +137,28 @@ def _draft_hinglish_recovery_message(payment_record: dict, action: str, recovery
         f"- No aggressive sales talk or spammy text."
     )
 
-    if ANTHROPIC_API_KEY and len(ANTHROPIC_API_KEY) > 10:
+    if GEMINI_API_KEY and len(GEMINI_API_KEY) > 5:
         try:
-            url = "https://api.anthropic.com/v1/messages"
-            headers = {
-                "x-api-key": ANTHROPIC_API_KEY,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json"
-            }
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+            headers = {"Content-Type": "application/json"}
             body = {
-                "model": CLAUDE_MODEL,
-                "max_tokens": 150,
-                "system": "You are a customer communication specialist drafting concise Hinglish payment recovery messages.",
-                "messages": [{"role": "user", "content": prompt}]
+                "contents": [{
+                    "parts": [{"text": f"You are a customer communication specialist drafting concise Hinglish payment recovery messages.\n\n{prompt}"}]
+                }],
+                "generationConfig": {
+                    "temperature": 0.3,
+                    "maxOutputTokens": 150
+                }
             }
 
             req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=8) as response:
                 res_data = json.loads(response.read().decode("utf-8"))
-                text = res_data["content"][0]["text"].strip()
+                text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
                 return {"message": text, "llm_called": True}
         except Exception:
             pass
+
 
     # High-quality Hinglish fallback template when API key is missing or offline
     if action == "send_card_update_link":

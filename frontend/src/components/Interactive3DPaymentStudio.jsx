@@ -95,8 +95,9 @@ export default function Interactive3DPaymentStudio({ onLaunchBatch, onNavigateTa
             </span>
           </h1>
           <p className="text-slate-300 text-sm sm:text-base font-normal max-w-xl mt-3 leading-relaxed">
-            Diagnoses failed payment mandates, executes Claude Sonnet LLM risk evaluation, generates Razorpay test links, and stops fraud retries.
+            Diagnoses failed payment mandates, executes Google Gemini LLM risk evaluation, generates Razorpay test links, and stops fraud retries.
           </p>
+
         </div>
 
 

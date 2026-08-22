@@ -3,8 +3,7 @@
 > *Razorpay AI Buildathon — Revenue Recovery Track Entry*
 
 
-An autonomous, functional Buildathon prototype fintech agent that diagnoses failed recurring payment mandates, applies Claude 3.5 Sonnet LLM risk judgment, enforces strict non-negotiable hard stopping rules, executes Razorpay test-mode API actions (payment retries & payment update links), and demonstrates a **+74% net revenue lift** over a naive baseline.
-
+An autonomous, functional Buildathon prototype fintech agent that diagnoses failed recurring payment mandates, applies Google Gemini 2.5 Flash LLM risk judgment, enforces strict non-negotiable hard stopping rules, executes Razorpay test-mode API actions (payment retries & payment update links), and demonstrates a **+74% net revenue lift** over a naive baseline.
 
 ---
 
@@ -17,8 +16,8 @@ An autonomous, functional Buildathon prototype fintech agent that diagnoses fail
 2. **Deterministic Root Cause Classifier** (`classifier.py`)
    - Plain Python code mapping failure codes directly to standard root cause categories without LLM latency or cost.
 
-3. **Claude Risk Judgment Agent** (`risk_judgment.py`)
-   - Calls Anthropic Claude API (Sonnet) for high-risk / high-attempt edge cases (`attempt_number >= 3` or `repeated_decline_pattern`).
+3. **Google Gemini Risk Judgment Agent** (`risk_judgment.py`)
+   - Calls Google Gemini API (`gemini-2.5-flash`) for high-risk / high-attempt edge cases (`attempt_number >= 3` or `repeated_decline_pattern`).
    - Returns structured JSON verdict (`continue_recovery` | `stop_and_flag`) and audit reasoning string.
 
 4. **Explicit Decision Policy Engine** (`decision_engine.py`)
@@ -30,7 +29,8 @@ An autonomous, functional Buildathon prototype fintech agent that diagnoses fail
 
 5. **Action Executor & Hinglish Message Drafter** (`executor.py`)
    - Triggers Razorpay Test APIs for payment retries, subscription charges, and Payment Link creation.
-   - Calls Claude API to draft friendly, natural Hinglish customer recovery SMS messages containing Razorpay links.
+   - Calls Google Gemini API to draft friendly, natural Hinglish customer recovery SMS messages containing Razorpay links.
+
 
 6. **SQLite Audit Trail & Baseline Analytics** (`audit.py` & `baseline_simulator.py`)
    - Logs complete step-by-step decision audit trail per payment ID in SQLite.

@@ -1,7 +1,23 @@
-import React from 'react';
-import { ShieldCheck, Activity, Database, FileText, Layers, Zap, Server } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Activity, Database, FileText, Layers, Zap, Server, Key, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, totalRecords, isProcessing }) {
+  const [systemStatus, setSystemStatus] = useState(null);
+
+  useEffect(() => {
+    fetchSystemStatus();
+  }, []);
+
+  const fetchSystemStatus = async () => {
+    try {
+      const res = await fetch('/api/system-status');
+      const data = await res.json();
+      setSystemStatus(data);
+    } catch (err) {
+      console.error('System status error:', err);
+    }
+  };
+
   const tabs = [
     { id: 'workbench', label: '⚡ Live Judge Sandbox', icon: Zap },
     { id: 'dashboard', label: 'Batch Dashboard', icon: Activity },
@@ -11,8 +27,38 @@ export default function Navbar({ activeTab, setActiveTab, totalRecords, isProces
     { id: 'architecture', label: 'Architecture', icon: Server },
   ];
 
+  const isLiveKeys = systemStatus?.running_mode === 'LIVE_API_KEYS';
+
   return (
     <header className="sticky top-0 z-50 bg-slate-950/90 border-b border-slate-800/90 backdrop-blur-2xl mb-8 shadow-2xl">
+      
+      {/* System API Keys / Default Data Status Bar */}
+      <div className={`w-full py-1.5 px-4 text-center text-xs font-semibold flex items-center justify-center gap-2 border-b ${
+        isLiveKeys 
+          ? 'bg-emerald-950/80 border-emerald-800/60 text-emerald-300' 
+          : 'bg-amber-950/80 border-amber-800/60 text-amber-300'
+      }`}>
+        {isLiveKeys ? (
+          <>
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+            <span>System Running on <strong>LIVE API KEYS</strong></span>
+            <span className="opacity-40">&bull;</span>
+            <span className="text-[11px] font-mono opacity-90">Gemini 2.5 Flash Connected</span>
+            <span className="opacity-40">&bull;</span>
+            <span className="text-[11px] font-mono opacity-90">{systemStatus?.razorpay_mode}</span>
+          </>
+        ) : (
+          <>
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+            <span>System Running on <strong>DEFAULT DEMO DATA MODE</strong></span>
+            <span className="opacity-40">&bull;</span>
+            <span className="text-[11px] font-mono opacity-90">Offline Heuristic Engine Active</span>
+            <span className="opacity-40">&bull;</span>
+            <span className="text-[11px] opacity-80">(No API Keys Configured — Fully Functional Prototype)</span>
+          </>
+        )}
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Brand Logo & Title */}
@@ -35,6 +81,7 @@ export default function Navbar({ activeTab, setActiveTab, totalRecords, isProces
             <p className="text-xs text-slate-400 font-medium">Autonomous Mandate & Subscription Recovery Agent</p>
           </div>
         </div>
+
 
 
         {/* 3D Tactile Navigation Tabs */}

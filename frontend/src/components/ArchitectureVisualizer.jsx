@@ -23,12 +23,12 @@ export default function ArchitectureVisualizer() {
     return {"root_cause": "unknown_decline", "reasoning": "Generic failure."}`
     },
     llm_risk: {
-      title: "Step 2: Claude 3.5 Sonnet Risk Judgment Agent",
+      title: "Step 2: Google Gemini 2.5 Flash Risk Agent",
       file: "backend/risk_judgment.py",
-      tech: "Anthropic Claude 3.5 Sonnet API",
+      tech: "Google Gemini 2.5 Flash REST API",
       summary: "Triggered on high-risk edge cases (attempt >= 3 or repeated decline patterns). Evaluates customer tenure, amount, and decline velocity. Outputs JSON verdict to continue recovery or stop & flag fraud.",
-      code: `POST https://api.anthropic.com/v1/messages
-Headers: { "x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }
+      code: `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=GEMINI_API_KEY
+Headers: { "Content-Type": "application/json" }
 
 System Prompt:
 "You are a Fintech Loss Prevention Agent. Return ONLY valid JSON:
@@ -40,6 +40,7 @@ Response Payload:
   "reasoning": "High attempt count (attempt 3) with repeated card decline velocity. High chargeback risk."
 }`
     },
+
     policy_engine: {
       title: "Step 3: Hard Stopping Rules Policy Engine",
       file: "backend/decision_engine.py",

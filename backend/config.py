@@ -66,13 +66,14 @@ NAIVE_BASELINE_BLIND_RETRY_SUCCESS = {
     "repeated_hard_decline": 0.0
 }
 
-# API Credentials & Pinned Model Selection
-# Pinned model snapshot 'claude-3-5-sonnet-20241022' chosen for 100% deterministic reproducibility across evaluation benchmark runs
-CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+# API Credentials & Model Selection
+# Google Gemini API key configuration & default model
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "rzp_test_mock_id")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "rzp_test_mock_secret")
 
 DB_PATH = "audit_log.db"
 DATASET_PATH = "synthetic_failures.json"
+
 

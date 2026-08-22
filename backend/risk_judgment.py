@@ -2,12 +2,12 @@ import json
 import os
 import urllib.request
 import urllib.error
-from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+from config import GEMINI_API_KEY, GEMINI_MODEL
 
 def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
     """
     Evaluates whether a high-risk or high-attempt case should continue recovery or stop & flag.
-    Calls Anthropic Claude API (Sonnet) when ANTHROPIC_API_KEY is configured.
+    Calls Google Gemini API when GEMINI_API_KEY is configured.
     Falls back gracefully to dynamic heuristic judgment if API key is unconfigured.
     
     Triggered when:
@@ -31,7 +31,6 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
             "llm_called": False
         }
 
-        
     prompt_payload = {
         "payment_id": payment_record.get("payment_id"),
         "customer_id": payment_record.get("customer_id"),
@@ -55,33 +54,32 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
 
     user_message = f"Evaluate the risk for this recurring payment failure record:\n{json.dumps(prompt_payload, indent=2)}"
 
-    # If ANTHROPIC_API_KEY is available, invoke live Claude API
-    if ANTHROPIC_API_KEY and len(ANTHROPIC_API_KEY) > 10:
+    # If GEMINI_API_KEY is available, invoke Google Gemini REST API
+    if GEMINI_API_KEY and len(GEMINI_API_KEY) > 5:
         try:
-            url = "https://api.anthropic.com/v1/messages"
-            headers = {
-                "x-api-key": ANTHROPIC_API_KEY,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json"
-            }
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+            headers = {"Content-Type": "application/json"}
             body = {
-                "model": CLAUDE_MODEL,
-                "max_tokens": 300,
-                "system": system_prompt,
-                "messages": [{"role": "user", "content": user_message}]
+                "contents": [{
+                    "parts": [{"text": f"{system_prompt}\n\nUser Record:\n{user_message}"}]
+                }],
+                "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "temperature": 0.1
+                }
             }
 
             req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=10) as response:
                 res_data = json.loads(response.read().decode("utf-8"))
-                text_content = res_data["content"][0]["text"]
-                # Parse JSON output from Claude
+                text_content = res_data["candidates"][0]["content"]["parts"][0]["text"]
                 parsed = json.loads(text_content.strip())
                 parsed["llm_called"] = True
                 return parsed
         except Exception as e:
             # Fallback to local heuristic on API network error
             pass
+
 
     # High-quality dynamic fallback judgment (simulates Sonnet reasoning when offline / no API key)
     # Rules:

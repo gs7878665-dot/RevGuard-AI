@@ -12,41 +12,33 @@ import AuditDetailModal from './components/AuditDetailModal';
 import PolicyMatrixView from './components/PolicyMatrixView';
 import ArchitectureVisualizer from './components/ArchitectureVisualizer';
 
-// 3D Spatial Webpage Morph & Flip Transition Variants
+// Clean & Safe Page View Transition Variants
 const spatial3DTabVariants = {
   initial: {
     opacity: 0,
-    rotateY: 20,
-    rotateX: -8,
-    z: -300,
-    scale: 0.92,
-    filter: 'blur(8px)'
+    y: 18,
+    scale: 0.98
   },
   animate: {
     opacity: 1,
-    rotateY: 0,
-    rotateX: 0,
-    z: 0,
+    y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
-      duration: 0.45,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1]
     }
   },
   exit: {
     opacity: 0,
-    rotateY: -20,
-    rotateX: 8,
-    z: -300,
-    scale: 0.92,
-    filter: 'blur(8px)',
+    y: -12,
+    scale: 0.98,
     transition: {
-      duration: 0.35,
+      duration: 0.25,
       ease: [0.7, 0, 0.84, 0]
     }
   }
 };
+
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('workbench');

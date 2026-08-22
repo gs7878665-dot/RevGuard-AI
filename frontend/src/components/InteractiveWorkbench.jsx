@@ -18,6 +18,8 @@ export default function InteractiveWorkbench({ onRefreshData }) {
   const [isRunning, setIsRunning] = useState(false);
   const [stepProgress, setStepProgress] = useState(0);
   const [executionResult, setExecutionResult] = useState(null);
+  const [executionError, setExecutionError] = useState(null);
+
 
   // Razorpay Modal State
   const [showRazorpayModal, setShowRazorpayModal] = useState(false);
@@ -33,12 +35,13 @@ export default function InteractiveWorkbench({ onRefreshData }) {
     setIsRunning(true);
     setStepProgress(1);
     setExecutionResult(null);
+    setExecutionError(null);
 
     // Step animation timing
-    setTimeout(() => setStepProgress(2), 300);
-    setTimeout(() => setStepProgress(3), 600);
-    setTimeout(() => setStepProgress(4), 900);
-    setTimeout(() => setStepProgress(5), 1200);
+    setTimeout(() => setStepProgress(2), 250);
+    setTimeout(() => setStepProgress(3), 500);
+    setTimeout(() => setStepProgress(4), 750);
+    setTimeout(() => setStepProgress(5), 1000);
 
     try {
       const res = await fetch('/api/simulate-single-case', {
@@ -54,13 +57,24 @@ export default function InteractiveWorkbench({ onRefreshData }) {
         })
       });
 
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ detail: `HTTP ${res.status} ${res.statusText}` }));
+        throw new Error(errData.detail || errData.message || `API request failed with status ${res.status}`);
+      }
+
       const data = await res.json();
+      if (data.status === 'error') {
+        throw new Error(data.message || 'Simulation execution failed');
+      }
+
       setExecutionResult(data);
       setStepProgress(6);
 
       if (onRefreshData) onRefreshData();
     } catch (err) {
       console.error('Single case simulation error:', err);
+      setExecutionError(err.message || 'Failed to execute payment simulation');
+      setStepProgress(0);
     } finally {
       setIsRunning(false);
     }
@@ -138,8 +152,9 @@ export default function InteractiveWorkbench({ onRefreshData }) {
             RevGuard AI Live Recovery Test Sandbox
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
-            Simulate a real recurring payment failure, watch Claude AI Sonnet evaluate risk in real-time, generate live Razorpay payment links, and test Razorpay Checkout recovery!
+            Simulate a real recurring payment failure, watch Google Gemini 2.5 Flash evaluate risk in real-time, generate live Razorpay payment links, and test Razorpay Checkout recovery!
           </p>
+
         </div>
 
 
@@ -263,7 +278,23 @@ export default function InteractiveWorkbench({ onRefreshData }) {
             )}
           </h3>
 
-          {!executionResult && !isRunning && (
+          {/* Error Message Card */}
+          {executionError && !isRunning && (
+            <div className="p-6 rounded-2xl bg-rose-950/60 border border-rose-800/80 text-rose-200 space-y-3 shadow-xl">
+              <div className="flex items-center gap-2 text-rose-300 font-extrabold text-sm">
+                <AlertOctagon className="w-5 h-5 text-rose-400 animate-pulse" />
+                Pipeline Execution Error Encountered
+              </div>
+              <p className="text-xs font-mono text-rose-200 bg-rose-900/40 p-3 rounded-xl border border-rose-800/80 leading-relaxed overflow-x-auto">
+                {executionError}
+              </p>
+              <p className="text-xs text-slate-400">
+                Please verify backend Uvicorn server is running on <strong>port 8000</strong> or check backend terminal logs.
+              </p>
+            </div>
+          )}
+
+          {!executionResult && !isRunning && !executionError && (
             <div className="p-12 text-center rounded-2xl bg-slate-950/60 border border-slate-800 border-dashed text-slate-400">
               <Sparkles className="w-8 h-8 text-slate-600 mx-auto mb-3 animate-pulse" />
               <p className="text-sm font-semibold text-slate-300">No test case executed yet.</p>
@@ -272,6 +303,7 @@ export default function InteractiveWorkbench({ onRefreshData }) {
               </p>
             </div>
           )}
+
 
           {/* Progress Timeline Cards */}
           {(isRunning || executionResult) && (
@@ -302,11 +334,12 @@ export default function InteractiveWorkbench({ onRefreshData }) {
                 <div className="flex justify-between items-center">
                   <div className="text-xs font-bold text-indigo-400 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-indigo-400" />
-                    Step 2: Claude 3.5 Sonnet LLM Risk Agent
+                    Step 2: Google Gemini 2.5 Flash Risk Agent
                   </div>
                   <span className="text-[10px] font-mono text-slate-400">
-                    {audit?.llm_risk_called ? 'LIVE SONNET API CALL' : 'HEURISTIC EVAL'}
+                    {audit?.llm_risk_called ? 'LIVE GEMINI API CALL' : 'HEURISTIC EVAL'}
                   </span>
+
                 </div>
                 {audit && (
                   <div className="mt-2 text-xs text-slate-300">

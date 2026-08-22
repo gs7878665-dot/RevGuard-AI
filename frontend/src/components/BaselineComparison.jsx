@@ -54,8 +54,9 @@ export default function BaselineComparison({ baselineComp }) {
             </div>
             <div>
               <h3 className="font-bold text-white text-base">RevGuard AI Agent</h3>
-              <p className="text-xs text-slate-400">Root-cause diagnosis + Claude Risk + Razorpay Links</p>
+              <p className="text-xs text-slate-400">Root-cause diagnosis + Gemini Risk + Razorpay Links</p>
             </div>
+
 
           </div>
 
