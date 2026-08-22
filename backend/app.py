@@ -328,8 +328,15 @@ def get_recent_webhooks():
     }
 
 
+@app.get("/api/eval-risk-judgment")
+def get_risk_judgment_evaluation():
+    """Runs and returns evaluation accuracy metrics across the 15-case risk benchmark dataset."""
+    from eval_risk_judgment import run_risk_evaluation
+    return run_risk_evaluation()
+
 @app.get("/api/audit-trail/{payment_id}")
 def get_single_audit(payment_id: str):
+
     """Fetches detailed audit record for a single payment case."""
     audit = get_audit_by_payment_id(payment_id)
     if not audit:

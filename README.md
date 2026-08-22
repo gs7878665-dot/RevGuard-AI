@@ -3,7 +3,8 @@
 > *Razorpay AI Buildathon — Revenue Recovery Track Entry*
 
 
-An autonomous, production-ready fintech agent that diagnoses failed recurring payment mandates, applies Claude 3.5 Sonnet LLM risk judgment, enforces strict non-negotiable hard stopping rules, executes Razorpay test-mode API actions (payment retries & payment update links), and demonstrates a **+74% net revenue lift** over a naive baseline.
+An autonomous, functional Buildathon prototype fintech agent that diagnoses failed recurring payment mandates, applies Claude 3.5 Sonnet LLM risk judgment, enforces strict non-negotiable hard stopping rules, executes Razorpay test-mode API actions (payment retries & payment update links), and demonstrates a **+74% net revenue lift** over a naive baseline.
+
 
 ---
 

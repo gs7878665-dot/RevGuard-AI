@@ -2,7 +2,7 @@ import json
 import os
 import urllib.request
 import urllib.error
-from config import ANTHROPIC_API_KEY
+from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 
 def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
     """
@@ -17,13 +17,20 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
     attempt_number = payment_record.get("attempt_number", 0)
     
     # Check if risk judgment is required
-    needs_risk_call = (customer_history == "repeated_decline_pattern") or (attempt_number >= 3)
+    root_cause = root_cause_info.get("root_cause")
+    needs_risk_call = (
+        customer_history == "repeated_decline_pattern" or 
+        attempt_number >= 3 or 
+        root_cause == "hard_decline" or 
+        payment_record.get("failure_code") in ["card_blocked", "card_stolen", "hard_decline"]
+    )
     if not needs_risk_call:
         return {
             "verdict": "continue_recovery",
             "reasoning": "Standard risk profile. Attempt count < 3 and customer history flag is non-risky.",
             "llm_called": False
         }
+
         
     prompt_payload = {
         "payment_id": payment_record.get("payment_id"),
@@ -58,11 +65,12 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
                 "content-type": "application/json"
             }
             body = {
-                "model": "claude-3-5-sonnet-20241022",
+                "model": CLAUDE_MODEL,
                 "max_tokens": 300,
                 "system": system_prompt,
                 "messages": [{"role": "user", "content": user_message}]
             }
+
             req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=10) as response:
                 res_data = json.loads(response.read().decode("utf-8"))
@@ -82,26 +90,29 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
     # 3. Attempt >= 4 with repeated decline pattern -> stop_and_flag (futile)
     
     root_cause = root_cause_info.get("root_cause")
+    failure_code = payment_record.get("failure_code", "")
     tenure = payment_record.get("customer_tenure_days", 0)
     
-    if root_cause == "hard_decline":
+    if root_cause == "hard_decline" or failure_code in ["card_blocked", "card_stolen", "hard_decline"]:
         verdict = "stop_and_flag"
-        reasoning = "Claude Risk Assessment: Card reported blocked or hard decline pattern detected. High fraud/chargeback risk."
+        reasoning = "Heuristic Risk Assessment (fallback - no LLM call): Card reported blocked, stolen, or hard decline pattern detected. High fraud/chargeback risk."
     elif attempt_number >= 4 and customer_history == "repeated_decline_pattern":
         verdict = "stop_and_flag"
-        reasoning = f"Claude Risk Assessment: Customer has failed {attempt_number} attempts with repeated decline history. Recovery probability < 2%."
+        reasoning = f"Heuristic Risk Assessment (fallback - no LLM call): Customer has failed {attempt_number} attempts with repeated decline history. Recovery probability < 2%."
     elif tenure > 90:
         verdict = "continue_recovery"
-        reasoning = f"Claude Risk Assessment: Long customer tenure ({tenure} days) indicates strong LTV. Worth recovering despite attempt count ({attempt_number})."
+        reasoning = f"Heuristic Risk Assessment (fallback - no LLM call): Long customer tenure ({tenure} days) indicates strong LTV. Worth recovering despite attempt count ({attempt_number})."
     elif customer_history == "repeated_decline_pattern" and payment_record.get("amount", 0) > 5000:
         verdict = "stop_and_flag"
-        reasoning = "Claude Risk Assessment: High ticket subscription (INR >5000) with suspicious decline velocity. Route to risk flag."
+        reasoning = "Heuristic Risk Assessment (fallback - no LLM call): High ticket subscription (INR >5000) with suspicious decline velocity. Route to risk flag."
     else:
         verdict = "continue_recovery"
-        reasoning = f"Claude Risk Assessment: Account history shows manageable risk. Proceed with automated recovery pipeline."
+        reasoning = f"Heuristic Risk Assessment (fallback - no LLM call): Account history shows manageable risk. Proceed with automated recovery pipeline."
+
 
     return {
         "verdict": verdict,
         "reasoning": reasoning,
         "llm_called": False
     }
+

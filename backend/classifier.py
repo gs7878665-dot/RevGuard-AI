@@ -28,11 +28,20 @@ CLASSIFICATION_MAP = {
         "root_cause": "hard_decline",
         "reasoning": "Card blocked by issuing bank (reported lost, stolen, or frozen)."
     },
+    "card_stolen": {
+        "root_cause": "hard_decline",
+        "reasoning": "Card reported stolen or flagged for security lockdown."
+    },
+    "hard_decline": {
+        "root_cause": "hard_decline",
+        "reasoning": "Issuer bank rejected transaction with non-retryable hard decline."
+    },
     "repeated_hard_decline": {
         "root_cause": "hard_decline",
         "reasoning": "Issuer bank repeatedly rejected charge with permanent hard decline."
     }
 }
+
 
 def classify_root_cause(failure_code: str) -> dict:
     """

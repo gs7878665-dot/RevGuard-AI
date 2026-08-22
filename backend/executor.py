@@ -3,7 +3,7 @@ import uuid
 import urllib.request
 import urllib.parse
 import urllib.error
-from config import ANTHROPIC_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+from config import ANTHROPIC_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, CLAUDE_MODEL
 
 def execute_action(payment_record: dict, decision_info: dict) -> dict:
     """
@@ -145,11 +145,12 @@ def _draft_hinglish_recovery_message(payment_record: dict, action: str, recovery
                 "content-type": "application/json"
             }
             body = {
-                "model": "claude-3-5-sonnet-20241022",
+                "model": CLAUDE_MODEL,
                 "max_tokens": 150,
                 "system": "You are a customer communication specialist drafting concise Hinglish payment recovery messages.",
                 "messages": [{"role": "user", "content": prompt}]
             }
+
             req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=8) as response:
                 res_data = json.loads(response.read().decode("utf-8"))

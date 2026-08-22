@@ -1,0 +1,33 @@
+# Environment & Credentials
+.env
+.env.local
+*.env
+
+# SQLite Database Files (Demo State)
+*.db
+*.sqlite
+*.sqlite3
+audit_log.db
+backend/audit_log.db
+
+# Node Modules & Build Outputs
+node_modules
+dist
+dist-ssr
+frontend/dist
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# OS and IDE Files
+.DS_Store
+.vscode/
+.idea/
+*.log
