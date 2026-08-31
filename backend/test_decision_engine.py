@@ -27,7 +27,7 @@ class TestDecisionEngine(unittest.TestCase):
 
         result = decide_recovery_action(payment_record, root_cause_info, risk_info)
         self.assertEqual(result["action"], "stop_and_flag")
-        self.assertIn("Claude Verdict = stop_and_flag", result["stopping_rule_triggered"])
+        self.assertIn("Gemini Verdict = stop_and_flag", result["stopping_rule_triggered"])
 
     def test_hard_stop_messaging_rate_limit(self):
         payment_record = {

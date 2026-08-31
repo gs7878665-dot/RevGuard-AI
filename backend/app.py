@@ -88,13 +88,13 @@ def _process_single_case(record: dict) -> dict:
     # Step 2: Root-cause classification (deterministic, plain code)
     root_cause_info = classify_root_cause(record["failure_code"])
     
-    # Step 3: Risk judgment (Claude API call for high attempt / risk history)
+    # Step 3: Risk judgment (Gemini API call for high attempt / risk history)
     risk_info = judge_customer_risk(record, root_cause_info)
     
     # Step 4: Decision engine (policy table + hard stopping rules)
     decision_info = decide_recovery_action(record, root_cause_info, risk_info)
     
-    # Step 5: Action executor (Razorpay APIs + Claude Hinglish message drafting)
+    # Step 5: Action executor (Razorpay APIs + Gemini Hinglish message drafting)
     execution_info = execute_action(record, decision_info)
     
     # Step 6: Outcome simulation
@@ -177,7 +177,7 @@ def simulate_single_case(payload: dict):
     Interactive Judge Workbench Endpoint:
     Simulates a live payment failure end-to-end, executing:
     - Root Cause Classification
-    - Claude Risk Judgment Agent (Sonnet LLM)
+    - Gemini Risk Judgment Agent (Gemini 2.5 Flash)
     - Hard Stopping Rules Enforcement
     - Razorpay API Payment Link creation
     - Hinglish Customer Recovery Message Drafting
@@ -206,13 +206,13 @@ def simulate_single_case(payload: dict):
     # Step 2: Deterministic Classification
     root_cause_info = classify_root_cause(record["failure_code"])
     
-    # Step 3: Claude Risk Judgment Agent
+    # Step 3: Gemini Risk Judgment Agent
     risk_info = judge_customer_risk(record, root_cause_info)
     
     # Step 4: Decision Engine Policy & Hard Stopping Rules
     decision_info = decide_recovery_action(record, root_cause_info, risk_info)
     
-    # Step 5: Action Executor (Razorpay Test API + Claude Hinglish SMS)
+    # Step 5: Action Executor (Razorpay Test API + Gemini Hinglish SMS)
     execution_info = execute_action(record, decision_info)
     
     # Step 6: Outcome Simulation

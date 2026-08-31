@@ -81,7 +81,7 @@ def judge_customer_risk(payment_record: dict, root_cause_info: dict) -> dict:
             pass
 
 
-    # High-quality dynamic fallback judgment (simulates Sonnet reasoning when offline / no API key)
+    # High-quality dynamic fallback judgment (simulates Gemini reasoning when offline / no API key)
     # Rules:
     # 1. Hard decline / card blocked -> ALWAYS stop_and_flag
     # 2. Tenure > 180 days with high amount -> continue (valuable customer worth recovering)

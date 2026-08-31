@@ -45,11 +45,11 @@ Response Payload:
       title: "Step 3: Hard Stopping Rules Policy Engine",
       file: "backend/decision_engine.py",
       tech: "Python Safety Constraints",
-      summary: "Enforces 3 non-negotiable hard stopping rules: (1) Max 4 attempts cap per payment ID, (2) Max 1 customer message per 7 days, (3) Claude Risk 'stop_and_flag' override.",
+      summary: "Enforces 3 non-negotiable hard stopping rules: (1) Max 4 attempts cap per payment ID, (2) Max 1 customer message per 7 days, (3) Gemini Risk 'stop_and_flag' override.",
       code: `def decide_recovery_action(record, root_cause_info, risk_info):
-    # Rule 1: Claude Risk Override
+    # Rule 1: Gemini Risk Override
     if risk_info.get("verdict") == "stop_and_flag":
-        return {"action": "stop_and_flag", "stopping_rule_triggered": "Claude Risk Verdict Override"}
+        return {"action": "stop_and_flag", "stopping_rule_triggered": "Gemini Risk Verdict Override"}
 
     # Rule 2: Max Attempts Cap
     if record["attempt_number"] >= 4:
@@ -58,8 +58,8 @@ Response Payload:
     razorpay_apis: {
       title: "Step 4: Razorpay Test APIs & Hinglish SMS Drafter",
       file: "backend/executor.py",
-      tech: "Razorpay REST API + Claude SMS Drafter",
-      summary: "Invokes Razorpay Payment Link API (v1/payment_links) or Subscription Retry API (v1/payments/{id}/retry), and calls Claude API to draft natural, polite Hinglish SMS messages containing the link.",
+      tech: "Razorpay REST API + Gemini SMS Drafter",
+      summary: "Invokes Razorpay Payment Link API (v1/payment_links) or Subscription Retry API (v1/payments/{id}/retry), and calls Gemini API to draft natural, polite Hinglish SMS messages containing the link.",
       code: `POST https://api.razorpay.com/v1/payment_links
 Headers: { "Authorization": "Basic " + b64_auth }
 
@@ -104,7 +104,7 @@ Body:
         <div>
           <h2 className="text-2xl font-black text-white tracking-tight">Technical System Architecture</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Razorpay Buildathon Project File Map & API Execution Flow (Python FastAPI + Claude LLM + SQLite).
+            Razorpay Buildathon Project File Map & API Execution Flow (Python FastAPI + Google Gemini LLM + SQLite).
           </p>
         </div>
       </div>

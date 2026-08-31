@@ -11,7 +11,7 @@ export default function BatchRunner({ onRunBatch, onRegenerateDataset, isProcess
             Batch Pipeline Executor
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-            Processes failed payments through Deterministic Classification &rarr; Claude Risk Judgment &rarr; Policy Engine &rarr; Razorpay APIs.
+            Processes failed payments through Deterministic Classification &rarr; Gemini Risk Judgment &rarr; Policy Engine &rarr; Razorpay APIs.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function BatchRunner({ onRunBatch, onRegenerateDataset, isProcess
           <div className="flex justify-between text-xs font-bold mb-2">
             <span className="text-emerald-400 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              Processing Payments via Claude Risk & Razorpay APIs...
+              Processing Payments via Gemini Risk & Razorpay APIs...
             </span>
             <span className="text-slate-200 font-mono">{progressPct}%</span>
           </div>

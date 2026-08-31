@@ -43,8 +43,8 @@ export default function PolicyMatrixView({ policyData }) {
             No more than <span className="font-mono text-emerald-400 font-bold">{policyData.max_messages_per_7_days}</span> customer message per 7 days per customer. Prevents customer spamming.
           </div>
           <div className="glass-card-3d p-4 rounded-xl">
-            <span className="font-bold text-amber-300 block mb-1">3. Claude Risk Override</span>
-            Any case where Claude risk verdict is <span className="font-mono text-rose-400 font-bold">"stop_and_flag"</span> is stopped immediately regardless of root cause.
+            <span className="font-bold text-amber-300 block mb-1">3. Gemini Risk Override</span>
+            Any case where Gemini risk verdict is <span className="font-mono text-rose-400 font-bold">"stop_and_flag"</span> is stopped immediately regardless of root cause.
           </div>
         </div>
       </div>

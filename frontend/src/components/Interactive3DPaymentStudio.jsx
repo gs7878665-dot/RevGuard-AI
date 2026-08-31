@@ -64,10 +64,10 @@ export default function Interactive3DPaymentStudio({ onLaunchBatch, onNavigateTa
       customer: "cust_440192",
       amount: "₹12,000 / mo",
       action: "stop_and_flag",
-      actionLabel: "Claude Risk Override: STOP & FLAG",
+      actionLabel: "Gemini Risk Override: STOP & FLAG",
       badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40",
       linkUrl: "Flagged for Fraud Audit",
-      explanation: "Sonnet LLM flags repeated hard decline risk. Prevents chargebacks and enforces hard stopping rule cap.",
+      explanation: "Gemini 2.5 Flash LLM flags repeated hard decline risk. Prevents chargebacks and enforces hard stopping rule cap.",
       recoveryProb: "0 Retries Allowed (Fraud Defense)"
     }
   };

@@ -28,10 +28,10 @@ def decide_recovery_action(payment_record: dict, root_cause_info: dict, risk_inf
     stopping_rule_triggered = None
     
     # ---------------------------------------------------------
-    # HARD STOPPING RULE #1: Claude Risk Verdict Override
+    # HARD STOPPING RULE #1: Gemini Risk Verdict Override
     # ---------------------------------------------------------
     if risk_verdict == "stop_and_flag":
-        stopping_rule_triggered = "Risk Assessment Override: Claude Verdict = stop_and_flag"
+        stopping_rule_triggered = "Risk Assessment Override: Gemini Verdict = stop_and_flag"
         return {
             "action": "stop_and_flag",
             "retry_delay_days": None,

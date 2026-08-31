@@ -10,7 +10,7 @@ def execute_action(payment_record: dict, decision_info: dict) -> dict:
     """
     Executes recovery action:
     - Calls Razorpay Test APIs for retries & payment link generation.
-    - Calls Claude API to draft natural Hinglish customer messages for customer-facing actions.
+    - Calls Google Gemini API to draft natural Hinglish customer messages for customer-facing actions.
     - Returns execution details for the audit log.
     """
     action = decision_info["action"]
@@ -37,7 +37,7 @@ def execute_action(payment_record: dict, decision_info: dict) -> dict:
         link_res = _call_razorpay_payment_link_api(payment_id, customer_id, amount, link_type)
         execution_result["razorpay_response"] = link_res
         
-        # Call Claude API to draft Hinglish customer recovery message
+        # Call Google Gemini API to draft Hinglish customer recovery message
         short_link = link_res.get("short_url", f"https://rzp.io/l/{link_res.get('id', 'plink_demo')}")
         msg_draft = _draft_hinglish_recovery_message(payment_record, action, short_link)
         execution_result["customer_message_draft"] = msg_draft.get("message")
@@ -119,7 +119,7 @@ def _call_razorpay_payment_link_api(payment_id: str, customer_id: str, amount: i
 
 def _draft_hinglish_recovery_message(payment_record: dict, action: str, recovery_link: str) -> dict:
     """
-    LLM Call 2: Uses Claude API to draft a warm, respectful, concise Hinglish recovery SMS/WhatsApp message.
+    LLM Call 2: Uses Google Gemini API to draft a warm, respectful, concise Hinglish recovery SMS/WhatsApp message.
     """
     amount = payment_record.get("amount")
     mandate_type = payment_record.get("mandate_type", "subscription").upper()

@@ -118,7 +118,7 @@ export default function Hero3D({ onLaunchDashboard }) {
           <pointLight position={[-10, -10, -10]} intensity={1.2} color="#EF4444" />
           
           <FloatingNode position={[-4.5, 0.5, 0]} color="#EF4444" label="Failed Mandates" type="failed" />
-          <FloatingNode position={[0, 0.2, 0.5]} color="#06B6D4" label="Claude AI Agent" type="agent" />
+          <FloatingNode position={[0, 0.2, 0.5]} color="#06B6D4" label="Gemini AI Agent" type="agent" />
           <FloatingNode position={[4.5, -0.3, 0]} color="#10B981" label="Razorpay Recovered" type="recovered" />
           
           <PipelineBeams />
@@ -143,7 +143,7 @@ export default function Hero3D({ onLaunchDashboard }) {
         </h1>
 
         <p className="text-slate-300 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-8 pointer-events-auto">
-          An autonomous fintech pipeline that diagnoses payment failures, applies Claude AI risk judgment, executes Razorpay test retries & recovery links, and out-recovers naive baselines.
+          An autonomous fintech pipeline that diagnoses payment failures, applies Gemini AI risk judgment, executes Razorpay test retries & recovery links, and out-recovers naive baselines.
         </p>
 
         <div className="flex flex-wrap items-center gap-4 pointer-events-auto">
@@ -187,10 +187,10 @@ export default function Hero3D({ onLaunchDashboard }) {
           </div>
           <div className="text-sm font-bold text-cyan-400 mt-1 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            Claude Risk Judgment
+            Gemini Risk Judgment
           </div>
           <p className="text-xs text-slate-400 mt-1 leading-normal">
-            Sonnet LLM evaluates high-attempt / bad history edge cases to stop & flag fraud.
+            Gemini 2.5 Flash LLM evaluates high-attempt / bad history edge cases to stop & flag fraud.
           </p>
         </div>
 

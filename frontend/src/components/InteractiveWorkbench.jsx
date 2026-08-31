@@ -236,7 +236,7 @@ export default function InteractiveWorkbench({ onRefreshData }) {
               <option value="insufficient_funds">insufficient_funds (Scheduled Salary Retry)</option>
               <option value="bank_technical_error">bank_technical_error (Immediate Retry)</option>
               <option value="mandate_expired">mandate_expired (Send Mandate Link)</option>
-              <option value="hard_decline">hard_decline (Claude Override: Stop & Flag)</option>
+              <option value="hard_decline">hard_decline (Gemini Override: Stop & Flag)</option>
               <option value="card_blocked">card_blocked (Fraud Stop)</option>
             </select>
           </div>
@@ -327,7 +327,7 @@ export default function InteractiveWorkbench({ onRefreshData }) {
                 )}
               </div>
 
-              {/* Step 2: Claude Risk LLM */}
+              {/* Step 2: Gemini Risk LLM */}
               <div className={`p-4 rounded-xl border transition-all ${
                 stepProgress >= 3 ? 'bg-slate-900/90 border-indigo-500/40' : 'bg-slate-950/50 border-slate-800 opacity-50'
               }`}>

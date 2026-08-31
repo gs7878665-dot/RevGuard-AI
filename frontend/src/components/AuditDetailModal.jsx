@@ -84,13 +84,13 @@ export default function AuditDetailModal({ caseData, onClose }) {
             </div>
           </div>
 
-          {/* Step 3: Claude Risk Judgment */}
+          {/* Step 3: Gemini Risk Judgment */}
           <div className="relative">
             <div className={`absolute -left-[31px] top-0 w-4 h-4 rounded-full border-2 ${
               caseData.risk_verdict === 'stop_and_flag' ? 'bg-amber-500 border-amber-300' : 'bg-indigo-500 border-indigo-300'
             }`} />
             <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" /> Step 3 &bull; Claude Risk Judgment Agent (Sonnet LLM)
+              <Sparkles className="w-3.5 h-3.5" /> Step 3 &bull; Gemini Risk Judgment Agent (Gemini 2.5 Flash)
             </div>
             <div className="mt-2 p-4 rounded-xl bg-slate-900/90 border border-slate-800/80">
               <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export default function AuditDetailModal({ caseData, onClose }) {
                 </div>
                 {caseData.llm_risk_called && (
                   <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-[10px] font-bold rounded">
-                    LIVE SONNET API CALL
+                    LIVE GEMINI API CALL
                   </span>
                 )}
               </div>
@@ -148,7 +148,7 @@ export default function AuditDetailModal({ caseData, onClose }) {
             <div className="relative">
               <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-teal-500 border-2 border-teal-300" />
               <div className="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5" /> Step 5 &bull; Hinglish Customer Message Draft (Claude LLM)
+                <MessageSquare className="w-3.5 h-3.5" /> Step 5 &bull; Hinglish Customer Message Draft (Gemini LLM)
               </div>
               <div className="mt-2 p-4 rounded-xl bg-slate-900/90 border border-slate-800/80">
                 <div className="p-3 rounded-xl bg-teal-950/40 border border-teal-800/50 text-xs text-teal-200 font-medium leading-relaxed font-sans">

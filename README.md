@@ -60,8 +60,8 @@ An autonomous, functional Buildathon prototype fintech agent that diagnoses fail
 
 ### 1. Environment Setup
 ```bash
-# Set your Anthropic API Key (Optional: system has realistic synthetic fallback if key is empty)
-export ANTHROPIC_API_KEY="your-anthropic-api-key"
+# Set your Google Gemini API Key (Optional: system has realistic synthetic fallback if key is empty)
+export GEMINI_API_KEY="your-gemini-api-key"
 export RAZORPAY_KEY_ID="rzp_test_xxxxxx"
 export RAZORPAY_KEY_SECRET="your-razorpay-secret"
 ```
@@ -104,9 +104,9 @@ razorpay_buildathon/
 │   ├── config.py              # Centralized policy constants & parameters
 │   ├── data_generator.py      # Reproducible 180-record dataset generator (seed=42)
 │   ├── classifier.py          # Deterministic root cause classifier
-│   ├── risk_judgment.py       # Claude Sonnet risk analyzer
+│   ├── risk_judgment.py       # Google Gemini 2.5 Flash risk analyzer
 │   ├── decision_engine.py     # Explicit policy table & hard stopping rules
-│   ├── executor.py            # Razorpay Test APIs & Claude Hinglish drafter
+│   ├── executor.py            # Razorpay Test APIs & Gemini Hinglish drafter
 │   ├── outcome_simulator.py   # Benchmark outcome simulator
 │   ├── audit.py               # SQLite audit log manager
 │   ├── baseline_simulator.py  # Naive baseline simulator
